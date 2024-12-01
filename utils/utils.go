@@ -1,6 +1,8 @@
 package utils
 
-import "os"
+import (
+	"os"
+)
 
 func ReadFileStr(filename string) (string, error) {
 	bytes, error := os.ReadFile(filename)
