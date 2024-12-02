@@ -35,8 +35,6 @@ func puzzle1(data *[2][]int) int {
 	sort.Ints(data[0])
 	sort.Ints(data[1])
 
-	fmt.Println()
-
 	var distance int = 0
 
 	for i := 0; i < len(data[0]); i++ {
