@@ -28,34 +28,61 @@ func parse_day2_data(str string) [][]int {
 	return data
 }
 
+func validate_level(level []int) bool {
+	level_len := len(level)
+	is_increasing := level[0] < level[1]
+
+	for i, number := range level {
+		if i+1 < level_len {
+			number2 := level[i+1]
+
+			diff := utils.AbsDiffInt(number, number2)
+
+			if is_increasing && number > number2 ||
+				!is_increasing && number < number2 || diff <= 0 || diff > 3 {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func puzzle1(data [][]int) int {
 	var safe int = 0
 
 	for _, level := range data {
-		level_len := len(level)
-		is_safe := true
-		is_increasing := level[0] < level[1]
+		if validate_level(level) {
+			safe++
+		}
+	}
+	return safe
+}
 
-		for i, number := range level {
-			if i+1 < level_len {
-				number2 := level[i+1]
+func puzzle2(data [][]int) int {
+	var safe int = 0
 
-				diff := utils.AbsDiffInt(number, number2)
-
-				if diff <= 0 || diff > 3 {
-					is_safe = false
-					break
+	for _, level := range data {
+		//level_len := len(level)
+		if validate_level(level) {
+			fmt.Println(level)
+			safe++
+		} else {
+			//generates every possibility of removal
+			for x, _ := range level {
+				array := []int{}
+				for y, number := range level {
+					if x != y {
+						array = append(array, number)
+					}
 				}
-				if is_increasing && level[i] > level[i+1] ||
-					!is_increasing && level[i] < level[i+1] {
-					is_safe = false
+				if validate_level(array) {
+					fmt.Println(array)
+					safe++
 					break
 				}
 			}
 		}
-		if is_safe {
-			safe++
-		}
+
 	}
 	return safe
 }
@@ -67,6 +94,8 @@ func main() {
 	} else {
 		data := parse_day2_data(str)
 		safe_count := puzzle1(data)
+		safe_count2 := puzzle2(data)
 		fmt.Printf("Day 1 - Puzzle 1 answer is %v\n", safe_count)
+		fmt.Printf("Day 1 - Puzzle 1 answer is %v\n", safe_count2)
 	}
 }
