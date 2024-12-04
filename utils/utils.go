@@ -25,3 +25,10 @@ func IsCharNum(c byte) bool {
 	}
 	return false
 }
+
+func BoolToInt(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
