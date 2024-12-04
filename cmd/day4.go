@@ -36,31 +36,29 @@ func diagonal_leftdown(col int, line int, lines []string) string {
 	return strbuilder.String()
 }
 
-func diagonal_rightup(col int, line int, lines []string) string {
+func diagonal_rightdown2(col int, line int, lines []string) string {
 	strbuilder := strings.Builder{}
 
-	if col+3 >= len(lines[0]) || line+3 >= len(lines) || line-3 < 0 {
+	if col+2 >= len(lines[0]) || line+2 >= len(lines) {
 		return ""
 	}
 
 	strbuilder.WriteByte(lines[line][col])
-	strbuilder.WriteByte(lines[line-1][col+1])
-	strbuilder.WriteByte(lines[line-2][col+2])
-	strbuilder.WriteByte(lines[line-3][col+3])
+	strbuilder.WriteByte(lines[line+1][col+1])
+	strbuilder.WriteByte(lines[line+2][col+2])
 
 	return strbuilder.String()
 }
-func diagonal_leftup(col int, line int, lines []string) string {
+func diagonal_leftdown2(col int, line int, lines []string) string {
 	strbuilder := strings.Builder{}
 
-	if col-3 >= len(lines[0]) || line-3 >= len(lines) || col-3 < 0 || line-3 < 0 {
+	if col-2 >= len(lines[0]) || line+2 >= len(lines) || col-2 < 0 {
 		return ""
 	}
 
 	strbuilder.WriteByte(lines[line][col])
-	strbuilder.WriteByte(lines[line-1][col-1])
-	strbuilder.WriteByte(lines[line-2][col-2])
-	strbuilder.WriteByte(lines[line-3][col-3])
+	strbuilder.WriteByte(lines[line+1][col-1])
+	strbuilder.WriteByte(lines[line+2][col-2])
 
 	return strbuilder.String()
 }
@@ -118,6 +116,27 @@ func puzzle1(lines []string) int {
 	return count
 }
 
+func puzzle2(lines []string) int {
+	count := 0
+	columns := len(lines[0])
+
+	for y := 0; y < len(lines); y++ {
+		for x := 0; x < columns; x++ {
+			line := lines[y]
+			if x+2 < len(line) {
+				if line[x] == 'M' || line[x] == 'S' {
+					fmt.Println(x+1, y+1, diagonal_rightdown2(x, y, lines), diagonal_leftdown2(x+2, y, lines))
+					if (diagonal_rightdown2(x, y, lines) == "MAS" || diagonal_rightdown2(x, y, lines) == "SAM") && (diagonal_leftdown2(x+2, y, lines) == "MAS" || diagonal_leftdown2(x+2, y, lines) == "SAM") {
+						count++
+					}
+				}
+			}
+		}
+	}
+
+	return count
+}
+
 func main() {
 	str, error := utils.ReadFileStr("./data/day4.txt")
 	if error == nil {
@@ -132,7 +151,9 @@ func main() {
 		}
 
 		puzzle1_res := puzzle1(lines)
+		puzzle2_res := puzzle2(lines)
 
 		fmt.Printf("Day 3 - Puzzle 1 answer is %v\n", puzzle1_res)
+		fmt.Printf("Day 3 - Puzzle 2 answer is %v\n", puzzle2_res)
 	}
 }
