@@ -32,3 +32,13 @@ func BoolToInt(b bool) int {
 	}
 	return 0
 }
+
+func SliceContains[T comparable](s []T, o T) (int, bool) {
+	for i, v := range s {
+		if v == o {
+			return i, true
+		}
+	}
+
+	return 0, false
+}

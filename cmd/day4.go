@@ -153,7 +153,7 @@ func main() {
 		puzzle1_res := puzzle1(lines)
 		puzzle2_res := puzzle2(lines)
 
-		fmt.Printf("Day 3 - Puzzle 1 answer is %v\n", puzzle1_res)
-		fmt.Printf("Day 3 - Puzzle 2 answer is %v\n", puzzle2_res)
+		fmt.Printf("Day 4 - Puzzle 1 answer is %v\n", puzzle1_res)
+		fmt.Printf("Day 4 - Puzzle 2 answer is %v\n", puzzle2_res)
 	}
 }
