@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/RodrigoVieira938/aoc24/utils"
@@ -52,7 +53,7 @@ func puzzle1(data []string) (int, []TurningPoint) {
 
 	turning_points := []TurningPoint{}
 
-	for true {
+	for {
 		c = data[pos.y][pos.x]
 
 		_, found := distinct_pos[pos]
@@ -64,9 +65,15 @@ func puzzle1(data []string) (int, []TurningPoint) {
 			if pos.y-1 < 0 {
 				break
 			} else {
-				if data[pos.y-1][pos.x] == '#' {
+				if data[pos.y-1][pos.x] == '#' || data[pos.y-1][pos.x] == 'O' {
 					data[pos.y] = replaceAtIndex(data[pos.y], '>', pos.x)
-					turning_points = append(turning_points, TurningPoint{'~', pos.x, pos.y})
+					turning_point := TurningPoint{'^', pos.x, pos.y}
+					for _, point := range turning_points {
+						if point == turning_point {
+							return 0, []TurningPoint{}
+						}
+					}
+					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
 					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
@@ -79,9 +86,15 @@ func puzzle1(data []string) (int, []TurningPoint) {
 			if pos.y+1 >= lines {
 				break
 			} else {
-				if data[pos.y+1][pos.x] == '#' {
+				if data[pos.y+1][pos.x] == '#' || data[pos.y+1][pos.x] == 'O' {
 					data[pos.y] = replaceAtIndex(data[pos.y], '<', pos.x)
-					turning_points = append(turning_points, TurningPoint{'V', pos.x, pos.y})
+					turning_point := TurningPoint{'V', pos.x, pos.y}
+					for _, point := range turning_points {
+						if point == turning_point {
+							return 0, []TurningPoint{}
+						}
+					}
+					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
 					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
@@ -94,9 +107,15 @@ func puzzle1(data []string) (int, []TurningPoint) {
 			if pos.x-1 < 0 {
 				break
 			} else {
-				if data[pos.y][pos.x-1] == '#' {
+				if data[pos.y][pos.x-1] == '#' || data[pos.y][pos.x-1] == 'O' {
 					data[pos.y] = replaceAtIndex(data[pos.y], '^', pos.x)
-					turning_points = append(turning_points, TurningPoint{'<', pos.x, pos.y})
+					turning_point := TurningPoint{'<', pos.x, pos.y}
+					for _, point := range turning_points {
+						if point == turning_point {
+							return 0, []TurningPoint{}
+						}
+					}
+					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
 					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
@@ -109,9 +128,15 @@ func puzzle1(data []string) (int, []TurningPoint) {
 			if pos.x+1 >= cols {
 				break
 			} else {
-				if data[pos.y][pos.x+1] == '#' {
+				if data[pos.y][pos.x+1] == '#' || data[pos.y][pos.x+1] == 'O' {
 					data[pos.y] = replaceAtIndex(data[pos.y], 'V', pos.x)
-					turning_points = append(turning_points, TurningPoint{'>', pos.x, pos.y})
+					turning_point := TurningPoint{'>', pos.x, pos.y}
+					for _, point := range turning_points {
+						if point == turning_point {
+							return 0, []TurningPoint{}
+						}
+					}
+					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
 					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
@@ -130,11 +155,42 @@ func puzzle1(data []string) (int, []TurningPoint) {
 	return distinct_pos_sum, turning_points
 }
 
+func puzzle2(data []string) int {
+	count := 0
+	for y, line := range data {
+		if len(line) == 0 {
+			continue
+		}
+		for x := range line {
+			if line[x] != '#' && line[x] != 'O' && line[x] != '<' && line[x] != '>' && line[x] != '^' && line[x] != 'V' {
+				clone := make([]string, len(data))
+				copy(clone, data)
+				clone[y] = replaceAtIndex(clone[y], 'O', x)
+				distinct_pos_sum, _ := puzzle1(clone)
+				is_loop := distinct_pos_sum == 0
+				if is_loop {
+					count++
+				}
+			}
+		}
+	}
+	return count
+}
+
 func main() {
 	str, error := utils.ReadFileStr("./data/day6.txt")
 	if error == nil {
 		data := strings.Split(strings.ReplaceAll(str, "\r\n", "\n"), "\n")
-		distinct_pos_sum, turning_points := puzzle1(data)
+		cols := len(data[0])
+
+		// Remove empty lines, or lines with less characters than the first line
+		for i, line := range data {
+			if len(line) != cols {
+				data = append(data[:i], data[i+1:]...)
+			}
+		}
+		distinct_pos_sum, _ := puzzle1(slices.Clone(data))
 		fmt.Printf("Day 5 - Puzzle 1 answer is %v\n", distinct_pos_sum)
+		fmt.Printf("Day 5 - Puzzle 2 answer is %v\n", puzzle2(data))
 	}
 }
