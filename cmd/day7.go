@@ -102,11 +102,48 @@ func puzzle1(data Data) int {
 	}
 	return calibration_sum
 }
+func puzzle2(data Data) int {
+	calibration_sum := 0
+	for _, eq := range data {
+		//Concatenation operator becomes | instead of || for simplicity
+		possibilities := generate_possibilities(len(eq.numbers)-1, []rune{'+', '*', '|'})
+		for _, possibility := range possibilities {
+			number_index := 0
+			first := true
+			res := 0
+			for _, op := range possibility {
+				if first {
+					res = eq.numbers[number_index]
+					number_index++
+					first = false
+				}
+				if op == '+' {
+					res += eq.numbers[number_index]
+				} else if op == '*' {
+					res *= eq.numbers[number_index]
+				} else if op == '|' {
+					builder := strings.Builder{}
+					builder.WriteString(strconv.Itoa(res))
+					builder.WriteString(strconv.Itoa(eq.numbers[number_index]))
+
+					res, _ = strconv.Atoi(builder.String()) //won't fail
+				}
+				number_index++
+			}
+			if res == eq.result {
+				calibration_sum += res
+				break
+			}
+		}
+	}
+	return calibration_sum
+}
 
 func main() {
 	str, error := utils.ReadFileStr("./data/day7.txt")
 	if error == nil {
 		data := parse_data(str)
 		fmt.Printf("Day 5 - Puzzle 1 answer is %v\n", puzzle1(data))
+		fmt.Printf("Day 5 - Puzzle 2 answer is %v\n", puzzle2(data))
 	}
 }
