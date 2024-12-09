@@ -42,3 +42,7 @@ func SliceContains[T comparable](s []T, o T) (int, bool) {
 
 	return 0, false
 }
+
+func StringReplaceAtIndex(str string, replacement rune, index int) string {
+	return str[:index] + string(replacement) + str[index+1:]
+}

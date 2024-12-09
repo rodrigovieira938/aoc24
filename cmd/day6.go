@@ -28,9 +28,6 @@ func find_starting_pos(data []string) Pos {
 	}
 	return Pos{-1, -1}
 }
-func replaceAtIndex(str string, replacement rune, index int) string {
-	return str[:index] + string(replacement) + str[index+1:]
-}
 func print_map(data []string) {
 	//It takes a lot of time to print out
 	/*for _, line := range data {
@@ -66,7 +63,7 @@ func puzzle1(data []string) (int, []TurningPoint) {
 				break
 			} else {
 				if data[pos.y-1][pos.x] == '#' || data[pos.y-1][pos.x] == 'O' {
-					data[pos.y] = replaceAtIndex(data[pos.y], '>', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], '>', pos.x)
 					turning_point := TurningPoint{'^', pos.x, pos.y}
 					for _, point := range turning_points {
 						if point == turning_point {
@@ -76,9 +73,9 @@ func puzzle1(data []string) (int, []TurningPoint) {
 					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
-					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], 'X', pos.x)
 					pos.y -= 1
-					data[pos.y] = replaceAtIndex(data[pos.y], '^', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], '^', pos.x)
 					print_map(data)
 				}
 			}
@@ -87,7 +84,7 @@ func puzzle1(data []string) (int, []TurningPoint) {
 				break
 			} else {
 				if data[pos.y+1][pos.x] == '#' || data[pos.y+1][pos.x] == 'O' {
-					data[pos.y] = replaceAtIndex(data[pos.y], '<', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], '<', pos.x)
 					turning_point := TurningPoint{'V', pos.x, pos.y}
 					for _, point := range turning_points {
 						if point == turning_point {
@@ -97,9 +94,9 @@ func puzzle1(data []string) (int, []TurningPoint) {
 					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
-					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], 'X', pos.x)
 					pos.y += 1
-					data[pos.y] = replaceAtIndex(data[pos.y], 'V', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], 'V', pos.x)
 					print_map(data)
 				}
 			}
@@ -108,7 +105,7 @@ func puzzle1(data []string) (int, []TurningPoint) {
 				break
 			} else {
 				if data[pos.y][pos.x-1] == '#' || data[pos.y][pos.x-1] == 'O' {
-					data[pos.y] = replaceAtIndex(data[pos.y], '^', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], '^', pos.x)
 					turning_point := TurningPoint{'<', pos.x, pos.y}
 					for _, point := range turning_points {
 						if point == turning_point {
@@ -118,9 +115,9 @@ func puzzle1(data []string) (int, []TurningPoint) {
 					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
-					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], 'X', pos.x)
 					pos.x -= 1
-					data[pos.y] = replaceAtIndex(data[pos.y], '<', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], '<', pos.x)
 					print_map(data)
 				}
 			}
@@ -129,7 +126,7 @@ func puzzle1(data []string) (int, []TurningPoint) {
 				break
 			} else {
 				if data[pos.y][pos.x+1] == '#' || data[pos.y][pos.x+1] == 'O' {
-					data[pos.y] = replaceAtIndex(data[pos.y], 'V', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], 'V', pos.x)
 					turning_point := TurningPoint{'>', pos.x, pos.y}
 					for _, point := range turning_points {
 						if point == turning_point {
@@ -139,9 +136,9 @@ func puzzle1(data []string) (int, []TurningPoint) {
 					turning_points = append(turning_points, turning_point)
 					print_map(data)
 				} else {
-					data[pos.y] = replaceAtIndex(data[pos.y], 'X', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], 'X', pos.x)
 					pos.x += 1
-					data[pos.y] = replaceAtIndex(data[pos.y], '>', pos.x)
+					data[pos.y] = utils.StringReplaceAtIndex(data[pos.y], '>', pos.x)
 					print_map(data)
 				}
 			}
@@ -165,7 +162,7 @@ func puzzle2(data []string) int {
 			if line[x] != '#' && line[x] != 'O' && line[x] != '<' && line[x] != '>' && line[x] != '^' && line[x] != 'V' {
 				clone := make([]string, len(data))
 				copy(clone, data)
-				clone[y] = replaceAtIndex(clone[y], 'O', x)
+				clone[y] = utils.StringReplaceAtIndex(clone[y], 'O', x)
 				distinct_pos_sum, _ := puzzle1(clone)
 				is_loop := distinct_pos_sum == 0
 				if is_loop {
@@ -190,7 +187,7 @@ func main() {
 			}
 		}
 		distinct_pos_sum, _ := puzzle1(slices.Clone(data))
-		fmt.Printf("Day 5 - Puzzle 1 answer is %v\n", distinct_pos_sum)
-		fmt.Printf("Day 5 - Puzzle 2 answer is %v\n", puzzle2(data))
+		fmt.Printf("Day 6 - Puzzle 1 answer is %v\n", distinct_pos_sum)
+		fmt.Printf("Day 6 - Puzzle 2 answer is %v\n", puzzle2(data))
 	}
 }

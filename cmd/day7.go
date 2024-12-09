@@ -143,7 +143,7 @@ func main() {
 	str, error := utils.ReadFileStr("./data/day7.txt")
 	if error == nil {
 		data := parse_data(str)
-		fmt.Printf("Day 5 - Puzzle 1 answer is %v\n", puzzle1(data))
-		fmt.Printf("Day 5 - Puzzle 2 answer is %v\n", puzzle2(data))
+		fmt.Printf("Day 7 - Puzzle 1 answer is %v\n", puzzle1(data))
+		fmt.Printf("Day 7 - Puzzle 2 answer is %v\n", puzzle2(data))
 	}
 }
