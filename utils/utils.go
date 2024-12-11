@@ -2,6 +2,7 @@ package utils
 
 import (
 	"os"
+	"unicode"
 )
 
 func ReadFileStr(filename string) (string, error) {
@@ -45,4 +46,13 @@ func SliceContains[T comparable](s []T, o T) (int, bool) {
 
 func StringReplaceAtIndex(str string, replacement rune, index int) string {
 	return str[:index] + string(replacement) + str[index+1:]
+}
+
+func IsStrInt(s string) bool {
+	for _, c := range s {
+		if !unicode.IsDigit(c) {
+			return false
+		}
+	}
+	return true
 }
