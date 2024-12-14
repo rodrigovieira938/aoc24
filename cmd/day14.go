@@ -60,7 +60,6 @@ func parse_data(str string) []Robot {
 	return robots
 }
 func puzzle1(robots []Robot) int {
-
 	quadrants := [4]int{0, 0, 0, 0}
 	map_size_x := 101
 	map_size_y := 103
@@ -125,10 +124,75 @@ func puzzle1(robots []Robot) int {
 	return quadrants[0] * quadrants[1] * quadrants[2] * quadrants[3]
 }
 
+func puzzle2(robots []Robot) int {
+	map_size_x := 101
+	map_size_y := 103
+
+	vertical_split := (map_size_x - 1) / 2
+	horizontal_split := (map_size_y - 1) / 2
+
+	get_pos_after_seconds := func(x int, y int, vx int, vy int, seconds int) (int, int) {
+		x_pos := (x + vx*seconds) % map_size_x
+		if x_pos < 0 {
+			x_pos = map_size_x + x_pos
+		}
+		y_pos := (y + vy*seconds) % map_size_y
+		if y_pos < 0 {
+			y_pos = map_size_y + y_pos
+		}
+		return x_pos, y_pos
+	}
+
+	seconds := 0
+	for {
+		lines := make([][]byte, map_size_y)
+
+		for y := range lines {
+			for x := 0; x < map_size_x; x++ {
+				lines[y] = append(lines[y], '.')
+			}
+		}
+		for _, robot := range robots {
+			x, y := get_pos_after_seconds(robot.pos.x, robot.pos.y, robot.velocity.x, robot.velocity.y, seconds)
+			if y == horizontal_split || x == vertical_split {
+				continue
+			}
+
+			if lines[y][x] != '.' {
+				lines[y][x] += 1
+			} else {
+				lines[y][x] = '1'
+			}
+		}
+		builder := strings.Builder{}
+		for y, line := range lines {
+			for x, char := range line {
+				if y == horizontal_split || x == vertical_split {
+					builder.WriteRune(' ')
+				} else {
+					builder.WriteByte(char)
+				}
+			}
+			builder.WriteRune('\n')
+		}
+		str := builder.String()
+		//Find for christmas tree
+		if strings.Contains(str, "1111111111111111111111111111111") {
+			fmt.Println(str)
+			return seconds
+		}
+
+		seconds++
+	}
+
+	return -1
+}
+
 func main() {
 	str, error := utils.ReadFileStr("./data/day14.txt")
 	if error == nil {
 		data := parse_data(str)
 		fmt.Printf("Day 14 - Puzzle 1 answer is %v\n", puzzle1(data))
+		fmt.Printf("Day 14 - Puzzle 2 answer is %v\n", puzzle2(data))
 	}
 }
