@@ -56,3 +56,10 @@ func IsStrInt(s string) bool {
 	}
 	return true
 }
+
+func IntAbs(i int) int {
+	if i > 0 {
+		return i
+	}
+	return 0 - i
+}
