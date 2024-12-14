@@ -141,5 +141,10 @@ func main() {
 	if error == nil {
 		data := parse_data(strings.Split(strings.ReplaceAll(str, "\r\n", "\n"), "\n"))
 		fmt.Printf("Day 13 - Puzzle 1 answer is %v\n", puzzle1(data))
+		for i := range data {
+			data[i].reward.x += 10000000000000
+			data[i].reward.y += 10000000000000
+		}
+		fmt.Printf("Day 13 - Puzzle 2 answer is %v\n", puzzle1(data))
 	}
 }
